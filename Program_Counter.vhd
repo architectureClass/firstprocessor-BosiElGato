@@ -24,9 +24,9 @@ if (rising_edge (Clk)) then
 		Data_aux <= "00000000000000000000000000000000";
 	end if;
 end if;
-Data_Out <=Data_aux;
-end process;
 
+end process;
+Data_Out <=Data_aux;
 
 end Behavioral;
 

@@ -17,14 +17,21 @@ process (Op1,Op2,AluOp)
 begin
 	case (AluOp) is 
 		when "000000" =>
-			AluResult <= Op1 + Op2;
+			AluResult <= Op1 + Op2; --ADD
 		when "000010" =>
-			AluResult <= Op1 or Op2;
+			AluResult <= Op1 or Op2; --OR
 		when "000100" =>
-			AluResult <= Op1 - Op2;
+			AluResult <= Op1 - Op2; --SuB
 		when "000001" =>
-			AluResult <= Op1 and Op2;
-			
+			AluResult <= Op1 and Op2; --AND
+		when "000101" =>
+			AluResult <= Op1 and not(Op2); --ANDN
+		when "000110" =>
+			AluResult <= Op1 or not(Op2); ---ORN 
+		when "000011" =>
+			AluResult <= Op1 XOR Op2;--XOR
+		when "000111" =>
+			AluResult <= Op1 Xnor Op2;--XNOR
 		when others =>
 			 AluResult <= (others => '0');
 	end case;

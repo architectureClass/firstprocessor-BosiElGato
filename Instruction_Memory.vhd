@@ -30,7 +30,7 @@ impure function InitRomFromFile (RomFileName : in string) return rom_type is
 		return temp_mem;
 	end function;
 	
-signal instructions : rom_type := InitRomFromFile("testJMPL.data");
+signal instructions : rom_type := InitRomFromFile("Mytest.data");
 
 begin
 
@@ -41,7 +41,7 @@ begin
 	if(rst = '1') then 
 		Data_Out <= (Others => '0');
 	else
-		Data_Out <= instructions(conv_integer(Address(5 downto 0)));
+		Data_Out <= instructions(conv_integer(Address(4 downto 0)));
 	end if;
 	
 end process;

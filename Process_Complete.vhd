@@ -6,8 +6,9 @@ use IEEE.STD_LOGIC_1164.ALL;
 entity Process_Complete is
     Port ( CLK : in  STD_LOGIC;
            RST : in  STD_LOGIC;
-           DataOut : out  STD_LOGIC_VECTOR (31 downto 0);
-           programCounter : out  STD_LOGIC_VECTOR (31 downto 0));
+			  aluResult : out  STD_LOGIC_VECTOR (31 DOWNTO 0));
+           --DataOut : out  STD_LOGIC_VECTOR (31 downto 0);
+           --programCounter : out  STD_LOGIC_VECTOR (31 downto 0));
 end Process_Complete;
 
 architecture Behavioral of Process_Complete is
@@ -63,6 +64,18 @@ Port ( Data_In : in  STD_LOGIC_VECTOR (31 downto 0);
            Data_Out : out  STD_LOGIC_VECTOR (31 downto 0));
 end component;
 
+component Mux is
+    Port ( Crs2 : in  STD_LOGIC_VECTOR (31 downto 0);
+           Imm : in  STD_LOGIC_VECTOR (31 downto 0);
+           i : in  STD_LOGIC;
+           Mux_Out : out  STD_LOGIC_VECTOR (31 downto 0));
+end component;
+
+component Extention_signal is
+    Port ( In1 : in  STD_LOGIC_VECTOR (12 downto 0);
+           Out1 : out  STD_LOGIC_VECTOR (31 downto 0));
+end component;
+
 
 	signal outadder_NPC : std_logic_vector(31 downto 0);
 	signal OutNPC_Add : std_logic_vector(31 downto 0);
@@ -72,6 +85,9 @@ end component;
 	signal outUC_ALU : std_logic_vector(5 downto 0);
 	signal outRF_Alu :std_logic_vector(31 downto 0);
 	signal outRF_Alu2 :std_logic_vector(31 downto 0);
+	signal Mux_out_aux :std_logic_vector(31 downto 0);     
+	signal Imm_out_aux :std_logic_vector(31 downto 0); 
+	
 begin
 
 
@@ -98,22 +114,22 @@ ProgramCounter1 : Program_Counter PORT MAP(
 
 InstructionMemory : Instruction_Memory PORT MAP(
 
-		Address =>OutPC_IM ,
+		Address => OutPC_IM ,
            rst =>RST,
            Data_Out => Out_IM 
 );
 
 UnidadControl: Control_Unity PORT MAP(
-			  Op3 => OutPC_IM(23 downto 18),
-           Op =>OutPC_IM(31 downto 30),
+			  Op3 => Out_IM(23 downto 18),
+           Op =>Out_IM(31 downto 30),
            AluOp =>outUC_ALU
 	);
 		
 RegisterFile1 : Register_File PORT MAP (
 
-			  Rs1 =>OutPC_IM(18 downto 14 ),
-           Rs2 =>OutPC_IM(4 downto 0 ),
-           Rd =>OutPC_IM(29 downto 25),
+			  Rs1 =>Out_IM(18 downto 14 ),
+           Rs2 =>Out_IM(4 downto 0 ),
+           Rd =>Out_IM(29 downto 25),
            Rst =>RST,
            Dwr =>OutALu_RF,
            CRs1 => outRF_Alu,
@@ -121,10 +137,25 @@ RegisterFile1 : Register_File PORT MAP (
 );
 AritmeticLogicUnity : Alu PORT MAP (
 			  Op1 => outRF_Alu,
-           Op2 => outRF_Alu2,
+           Op2 => Mux_out_aux,
            AluOp => outUC_ALU,
            AluResult => OutALu_RF
 );
+
+Multiplexor: Mux PORT MAP(
+           Crs2 => outRF_Alu2,
+           Imm => Imm_out_aux,
+           i => Out_IM(13),
+           Mux_Out =>Mux_out_aux
+);
+
+ExtensionSigno: Extention_signal PORT MAP(
+				In1 =>  Out_IM (12 downto 0),
+           Out1 => Imm_out_aux
+);
+
+ aluResult <= OutAlu_RF;
+
 
 end Behavioral;
 

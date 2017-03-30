@@ -15,10 +15,10 @@ process(In1)
 	begin
 		if(In1(12) = '1')then
 			Out1(12 downto 0) <= In1;
-			Out1(31 downto 22) <= (others=>'1');
+			Out1(31 downto 13) <= (others=>'1');
 		else
 			Out1(12 downto 0) <= In1;
-			Out1(31 downto 22) <= (others=>'0');
+			Out1(31 downto 13) <= (others=>'0');
 		end if;
 	end process;
 
