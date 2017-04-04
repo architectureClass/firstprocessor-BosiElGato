@@ -93,7 +93,7 @@ begin
 
 
 Sumador  : Adder PORT MAP(
-		op1 =>"00000000000000000000000000000100",
+		op1 =>"00000000000000000000000000000001",
 		op2 => OutNPC_Add,
 		result =>outadder_NPC
 );
@@ -120,7 +120,7 @@ InstructionMemory : Instruction_Memory PORT MAP(
 );
 
 UnidadControl: Control_Unity PORT MAP(
-			  Op3 => Out_IM(23 downto 18),
+			  Op3 => Out_IM(24 downto 19),
            Op =>Out_IM(31 downto 30),
            AluOp =>outUC_ALU
 	);
@@ -135,11 +135,10 @@ RegisterFile1 : Register_File PORT MAP (
            CRs1 => outRF_Alu,
            CRs2 => outRF_Alu2
 );
-AritmeticLogicUnity : Alu PORT MAP (
-			  Op1 => outRF_Alu,
-           Op2 => Mux_out_aux,
-           AluOp => outUC_ALU,
-           AluResult => OutALu_RF
+
+ExtensionSigno: Extention_signal PORT MAP(
+				In1 =>  Out_IM (12 downto 0),
+           Out1 => Imm_out_aux
 );
 
 Multiplexor: Mux PORT MAP(
@@ -149,12 +148,15 @@ Multiplexor: Mux PORT MAP(
            Mux_Out =>Mux_out_aux
 );
 
-ExtensionSigno: Extention_signal PORT MAP(
-				In1 =>  Out_IM (12 downto 0),
-           Out1 => Imm_out_aux
-);
 
- aluResult <= OutAlu_RF;
+
+AritmeticLogicUnity : Alu PORT MAP (
+			  Op1 => outRF_Alu,
+           Op2 => Mux_out_aux,
+           AluOp => outUC_ALU,
+           AluResult => OutALu_RF
+);
+aluResult <= OutAlu_RF;
 
 
 end Behavioral;

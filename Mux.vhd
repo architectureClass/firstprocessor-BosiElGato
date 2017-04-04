@@ -17,10 +17,10 @@ begin
 process(Crs2,Imm,i)
 begin
 
-if (i = '0') then 
-	Mux_Out <= Crs2;
-else
+if (i = '1') then 
 	Mux_Out <= Imm;
+else
+	Mux_Out <= Crs2;
 end if;
 end process;
 end Behavioral;
